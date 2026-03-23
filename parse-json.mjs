@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 
 const filePath = process.argv[2];
 
@@ -13,7 +13,11 @@ if (!filePath) {
 try {
   const raw = readFileSync(filePath, 'utf8').trim();
   const parsed = JSON.parse(raw);
-  console.log(JSON.stringify(parsed, null, 2));
+  const output = JSON.stringify(parsed, null, 2);
+
+  const outPath = filePath.replace(/(\.\w+)?$/, '.out.json');
+  writeFileSync(outPath, output, 'utf8');
+  console.log(`Written to ${outPath}`);
 } catch (err) {
   console.error('Failed to parse JSON:', err.message);
   process.exit(1);
